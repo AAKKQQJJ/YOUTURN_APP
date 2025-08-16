@@ -7,7 +7,7 @@ class ChatbotScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("YouTurn_챗봇"),
+        title: Text("You Turn_챗봇"),
       ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
