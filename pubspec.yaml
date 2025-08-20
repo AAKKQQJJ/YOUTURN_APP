@@ -57,6 +57,30 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  assets:
+    - asset/img/Apple.png
+    - asset/img/logo.png
+
+  fonts:
+    - family: malang
+      fonts:
+        - asset: asset/font/HancomMalangMalang-Bold.ttf
+          weight: 700
+        - asset: asset/font/HancomMalangMalang-Regular.ttf
+          weight: 500
+
+    - family: suit
+      fonts:
+        - asset: asset/font/SUIT-Bold.tft
+          weight: 800
+        - asset: asset/font/SUIT-Regular.tft
+          weight: 600
+        - asset: asset/font/SUIT-Medium.tft
+          weight: 400
+        - asset: asset/font/SUIT-Light.tft
+          weight: 200
+
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

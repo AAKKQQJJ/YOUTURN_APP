@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:youturn/screens/main_screen.dart';
+import 'package:youturn/screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MainScreen(),
+      home: LoginScreen(),
     );
   }
 }
