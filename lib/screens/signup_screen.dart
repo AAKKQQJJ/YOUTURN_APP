@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:youturn/const/colors.dart';
+import 'package:youturn/const/colors.dart'; // primaryColor 등
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatelessWidget {
+  const SignupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primaryColor, // 배경색
+      backgroundColor: primaryColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 60),
+              const SizedBox(height: 24),
+              // 뒤로가기 버튼
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                  onPressed: () {
+                    context.pop(); // go_router 기준
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
               const Text(
                 '귀농을 꿈꾸는 당신을 위한 AI 멘토',
                 style: TextStyle(
@@ -25,8 +36,7 @@ class LoginScreen extends StatelessWidget {
                   fontWeight: FontWeight.w800,
                 ),
               ),
-              const SizedBox(height: 16),
-              // 앱 로고와 텍스트
+              const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -46,8 +56,37 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 60),
-              // 아이디 입력창
+              const SizedBox(height: 40),
+
+              // 닉네임
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '닉네임',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontFamily: 'malang',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(32),
+                ),
+                child: const TextField(
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // 아이디
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -74,7 +113,8 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              // 비밀번호 입력창
+
+              // 비밀번호
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -101,35 +141,12 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
+
               const Spacer(),
-              // 로그인 버튼
+
+              // 회원가입 버튼
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.45, // 화면 너비의 60%
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: const Text(
-                    '로그인',
-                    style: TextStyle(
-                      color: Color(0xFF0DB2B2),
-                      fontSize: 20,
-                      fontFamily: 'malang',
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.45, // 화면 너비의 60%
+                width: MediaQuery.of(context).size.width * 0.45,
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -139,7 +156,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    context.push('/signup');
+                    // 회원가입 처리 로직 또는 다음 화면 이동
                   },
                   child: const Text(
                     '회원가입',
