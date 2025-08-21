@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:youturn/screens/main_screen.dart';
+
+import 'features/screens/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
