@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:youturn/features/chatbot/screen/chatbot_screen.dart';
 
 import 'features/screens/login_screen.dart';
 import 'features/screens/main_screen.dart';
@@ -16,6 +17,14 @@ final GoRouter _router = GoRouter(
       path: '/signup',
       builder: (context, state) => const SignupScreen(),
     ),
+    GoRoute(
+      path: '/main',
+      builder: (context, state) => const MainScreen(),
+    ),
+    GoRoute(
+      path: '/chatbot',
+      builder: (context, state) => const ChatbotScreen(),
+    ),
   ],
 );
 
@@ -30,13 +39,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: MainScreen(),
+    return MaterialApp.router(
+      routerConfig: _router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

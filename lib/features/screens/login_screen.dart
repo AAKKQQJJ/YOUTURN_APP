@@ -114,7 +114,9 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    context.push('/main');
+                  },
                   child: const Text(
                     '로그인',
                     style: TextStyle(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:youturn/features/chatbot/screen/chatbot_starting_screen.dart';
 
-import 'chatbot_screen.dart';
 import 'cunsulting_screen.dart';
 import 'home_screen.dart';
 import 'myprofile_screen.dart';
@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
     CunsultingScreen(),
 
     /// 쳇봇 탭
-    ChatbotScreen(),
+    ChatbotStartingScreen(),
 
     /// 내 정보 탭
     MyProfileScreen(),
@@ -54,8 +54,8 @@ class _MainScreenState extends State<MainScreen> {
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_add_alt_1_sharp), label: '커뮤니티'),
-          BottomNavigationBarItem(icon: Icon(Icons.bedtime_sharp), label: '수면모드'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_add_alt_1_sharp), label: '컨설팅'),
+          BottomNavigationBarItem(icon: Icon(Icons.bedtime_sharp), label: '챗봇'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: '내 정보'),
         ],
       ),
