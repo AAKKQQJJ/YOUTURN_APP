@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:youturn/features/chatbot/screen/chatbot_screen.dart';
 
-import 'features/screens/login_screen.dart';
+import 'features/auth/screen/login_screen.dart';
+import 'features/auth/screen/signup_screen.dart';
 import 'features/screens/main_screen.dart';
-import 'features/screens/signup_screen.dart';
 
 final GoRouter _router = GoRouter(
   initialLocation: '/login',

@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/const/colors.dart'; // primaryColor 등
+import '../../../core/const/colors.dart';
+import '../auth_api.dart'; // primaryColor 등
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController nicknameController = TextEditingController();
+
+  final TextEditingController idController = TextEditingController();
+
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +90,9 @@ class SignupScreen extends StatelessWidget {
                   color: Colors.white.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(32),
                 ),
-                child: const TextField(
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: nicknameController,
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 20),
                   ),
@@ -106,7 +119,8 @@ class SignupScreen extends StatelessWidget {
                   color: Colors.white.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(32),
                 ),
-                child: const TextField(
+                child: TextField(
+                  controller: idController,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 20),
@@ -134,7 +148,8 @@ class SignupScreen extends StatelessWidget {
                   color: Colors.white.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(32),
                 ),
-                child: const TextField(
+                child: TextField(
+                  controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -156,8 +171,36 @@ class SignupScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                     ),
                   ),
-                  onPressed: () {
-                    // 회원가입 처리 로직 또는 다음 화면 이동
+                  onPressed: () async {
+                    final nickname = nicknameController.text.trim();
+                    final id = idController.text.trim();
+                    final pw = passwordController.text.trim();
+
+                    if (nickname.isEmpty || id.isEmpty || pw.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('모든 항목을 입력해주세요.')),
+                      );
+                      return;
+                    }
+
+                    try {
+                      final success = await AuthApi.signup(nickname, id, pw);
+
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('회원가입이 완료되었습니다.')),
+                        );
+                        context.go('/login'); // 또는 context.pop() 으로 로그인 화면 복귀
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('회원가입에 실패했습니다.')),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('에러 발생: $e')),
+                      );
+                    }
                   },
                   child: const Text(
                     '회원가입',

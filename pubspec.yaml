@@ -62,6 +62,8 @@ flutter:
   assets:
     - asset/img/Apple.png
     - asset/img/logo.png
+    - asset/img/bot_image.png
+    - asset/img/user_image.png
 
   fonts:
     - family: malang

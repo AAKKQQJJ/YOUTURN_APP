@@ -10,12 +10,14 @@ class AuthApi {
     });
   }
 
-  static Future<Response> signup(String nickname, String id, String pw) {
-    return DioClient.dio.post(ApiRoutes.signup, data: {
+  static Future<bool> signup(String nickname, String id, String password) async {
+    final response = await DioClient.dio.post('/v1/auth/signup', data: {
       'nickname': nickname,
-      'id': id,
-      'password': pw,
+      'login_id': id,
+      'password': password,
     });
+
+    return response.statusCode == 201;
   }
 
   static Future<Response> autoLogin(String refreshToken) {
