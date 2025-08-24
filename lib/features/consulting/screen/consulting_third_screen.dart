@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../provider/dio_provider.dart';
 import '../../../provider/user_provider.dart';
 import '../consulting_data.dart';
 import '../consulting_repository.dart';
+import 'consulting_result_screen.dart';
 
 class ConsultingThirdScreen extends ConsumerStatefulWidget {
   final ConsultingData consultingData;
@@ -22,9 +23,7 @@ class _ConsultingThirdScreenState extends ConsumerState<ConsultingThirdScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.read(userProvider);
-    final userId = user?.id;
-    final dio = ref.watch(dioProvider);
-    final consultingRepository = ConsultingRepository(dio);
+    final consultingRepository = ref.watch(consultingRepositoryProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -79,40 +78,71 @@ class _ConsultingThirdScreenState extends ConsumerState<ConsultingThirdScreen> {
                             onPressed: isLoading
                                 ? null
                                 : () async {
+                                    if (user == null) {
+                                      _showSnackbar("사용자 정보를 찾을 수 없습니다");
+                                      return;
+                                    }
+
+                                    print('=== 사용자 정보 디버깅 ===');
+                                    print('user: $user');
+                                    print('user.id: ${user.id}');
+                                    print('user.id 타입: ${user.id.runtimeType}');
+
                                     setState(() => isLoading = true);
 
-                                    final updatedData = widget.consultingData.copyWith(
-                                      etc: etcController.text,
+                                    // 최종 데이터 구성 (기타 정보 추가)
+                                    final finalData = widget.consultingData.copyWith(
+                                      etc: etcController.text.trim(),
                                     );
 
                                     try {
-                                      final informationId =
-                                          await consultingRepository.submitConsultingInfo(
-                                              usersId: userId!, data: updatedData);
-                                      final llmResult = await consultingRepository
-                                          .requestConsultingResult(informationId);
+                                      // 1단계: 컨설팅 정보 제출
+                                      final informationId = await consultingRepository.submitConsultingInfo(
+                                        usersId: user.id,
+                                        data: finalData,
+                                      );
 
-                                      if (llmResult != null) {
-                                        if (!mounted) return;
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) =>
-                                                ConsultingResultScreen(resultText: llmResult),
+                                      // 2단계: LLM 결과 요청
+                                      if (mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('AI가 컨설팅 결과를 생성하고 있습니다... (최대 2분 소요)'),
+                                            duration: Duration(seconds: 3),
                                           ),
                                         );
-                                      } else {
-                                        _showSnackbar("컨설팅 결과 요청 실패");
                                       }
+                                      
+                                      final llmResult = await consultingRepository.requestConsultingResult(informationId);
+
+                                      if (!mounted) return;
+
+                                      // 결과 화면으로 이동
+                                      context.push(
+                                        '/consulting_result',
+                                        extra: llmResult,
+                                      );
                                     } catch (e) {
-                                      _showSnackbar("컨설팅 요청 중 오류 발생");
+                                      if (mounted) {
+                                        _showSnackbar("컨설팅 요청 중 오류 발생: ${e.toString()}");
+                                      }
                                     } finally {
-                                      setState(() => isLoading = false);
+                                      if (mounted) {
+                                        setState(() => isLoading = false);
+                                      }
                                     }
                                   },
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                            child: const Text('컨설팅 시작'),
-                ₩          ),
+                                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                            child: isLoading 
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text('컨설팅 시작'),
+                          ),
                         ),
                       ],
                     ),

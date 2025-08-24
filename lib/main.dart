@@ -7,8 +7,11 @@ import 'package:youturn/features/consulting/screen/consulting_seconds_screen.dar
 import 'features/auth/screen/login_screen.dart';
 import 'features/auth/screen/signup_screen.dart';
 import 'features/consulting/consulting_data.dart';
+import 'features/consulting/screen/consulting_screen.dart';
 import 'features/consulting/screen/consulting_third_screen.dart';
+import 'features/consulting/screen/consulting_result_screen.dart';
 import 'features/screens/main_screen.dart';
+import 'features/screens/home_screen.dart';
 
 final GoRouter _router = GoRouter(
   initialLocation: '/login',
@@ -26,13 +29,21 @@ final GoRouter _router = GoRouter(
       builder: (context, state) => const MainScreen(),
     ),
     GoRoute(
+      path: '/home',
+      builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
       path: '/chatbot',
       builder: (context, state) => const ChatbotScreen(),
     ),
     GoRoute(
+      path: '/consulting',
+      builder: (context, state) => const ConsultingScreen(),
+    ),
+    GoRoute(
       path: '/consulting_seconds',
       builder: (context, state) {
-        final consultingData = state.extra as Map<String, dynamic>;
+        final consultingData = state.extra as ConsultingData;
         return ConsultingSecondScreen(consultingData: consultingData);
       },
     ),
@@ -40,9 +51,15 @@ final GoRouter _router = GoRouter(
       path: '/consulting_third',
       name: 'consulting_third',
       builder: (context, state) {
-        final consultingDataMap = state.extra! as Map<String, dynamic>;
-        final consultingData = ConsultingData.fromJson(consultingDataMap); // 🔥 여기서 변환
+        final consultingData = state.extra as ConsultingData;
         return ConsultingThirdScreen(consultingData: consultingData);
+      },
+    ),
+    GoRoute(
+      path: '/consulting_result',
+      builder: (context, state) {
+        final resultText = state.extra as String;
+        return ConsultingResultScreen(resultText: resultText);
       },
     ),
   ],

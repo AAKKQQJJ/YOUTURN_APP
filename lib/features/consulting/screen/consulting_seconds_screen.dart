@@ -6,7 +6,7 @@ import '../../../provider/user_provider.dart';
 import '../consulting_data.dart';
 
 class ConsultingSecondScreen extends ConsumerStatefulWidget {
-  final Map<String, dynamic> consultingData;
+  final ConsultingData consultingData;
 
   const ConsultingSecondScreen({super.key, required this.consultingData});
 
@@ -76,13 +76,13 @@ class _ConsultingSecondScreenState extends ConsumerState<ConsultingSecondScreen>
                     ),
                     child: Column(
                       children: [
-                        _buildTextField(_budgetController, '예산 입력 (숫자만)'),
+                        _buildTextField(_budgetController, '예산 입력 (숫자만)', TextInputType.number),
                         const SizedBox(height: 20),
                         _buildTextField(_cropController, '선호 작물 입력'),
                         const SizedBox(height: 20),
                         _buildTextField(_regionController, '선호 지역 입력'),
                         const SizedBox(height: 20),
-                        _buildTextField(_experienceController, '농사 경험 입력'),
+                        _buildTextField(_experienceController, '농사 경험 입력 (년수)', TextInputType.number),
                         const SizedBox(height: 28),
                         ElevatedButton(
                           onPressed: () => _goToNextStep(context, ref),
@@ -113,9 +113,10 @@ class _ConsultingSecondScreenState extends ConsumerState<ConsultingSecondScreen>
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hint) {
+  Widget _buildTextField(TextEditingController controller, String hint, [TextInputType? keyboardType]) {
     return TextField(
       controller: controller,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white.withOpacity(0.9),
@@ -130,22 +131,26 @@ class _ConsultingSecondScreenState extends ConsumerState<ConsultingSecondScreen>
   }
 
   void _goToNextStep(BuildContext context, WidgetRef ref) {
-    final user = ref.read(userProvider);
-    if (user == null) return;
+    // 입력 검증
+    if (_budgetController.text.trim().isEmpty || 
+        _cropController.text.trim().isEmpty ||
+        _regionController.text.trim().isEmpty ||
+        _experienceController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('모든 필드를 입력해주세요')),
+      );
+      return;
+    }
 
-    // 1. ConsultingData 인스턴스 생성
-    final consultingData = ConsultingData(
-      budget: _budgetController.text,
-      preferredCrops: _cropController.text,
-      preferredRegion: _regionController.text,
-      farmingExperience: _experienceController.text,
-      // 추가 필드가 있으면 여기에 작성
+    // 이전 단계 데이터와 현재 단계 데이터를 합치기
+    final updatedData = widget.consultingData.copyWith(
+      budget: _budgetController.text.trim(),
+      preferredCrops: _cropController.text.trim(),
+      preferredRegion: _regionController.text.trim(),
+      farmingExperience: _experienceController.text.trim(),
     );
 
-    // 2. userId를 포함해 Map 형태로 변환
-    final updatedData = consultingData.toJson(userId: user.id);
-
-    // 3. GoRouter로 전달
+    // 세 번째 화면으로 이동
     context.push(
       '/consulting_third',
       extra: updatedData,

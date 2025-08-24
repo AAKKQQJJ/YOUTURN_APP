@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:youturn/core/const/colors.dart';
+import '../consulting_data.dart';
 
 class ConsultingScreen extends StatefulWidget {
   const ConsultingScreen({super.key});
@@ -10,16 +11,17 @@ class ConsultingScreen extends StatefulWidget {
 }
 
 class _ConsultingScreenState extends State<ConsultingScreen> {
-  final TextEditingController ageController = TextEditingController();
+  final TextEditingController birthDateController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController familyController = TextEditingController();
   final TextEditingController jobController = TextEditingController();
 
   String? _selectedGender;
+  DateTime? _selectedDate;
 
   @override
   void dispose() {
-    ageController.dispose();
+    birthDateController.dispose();
     addressController.dispose();
     familyController.dispose();
     jobController.dispose();
@@ -84,7 +86,7 @@ class _ConsultingScreenState extends State<ConsultingScreen> {
                       ),
                       child: Column(
                         children: [
-                          _buildTextField('나이 입력', ageController),
+                          _buildDateField(),
                           const SizedBox(height: 20),
 
                           // 성별 선택
@@ -149,6 +151,38 @@ class _ConsultingScreenState extends State<ConsultingScreen> {
     );
   }
 
+  Widget _buildDateField() {
+    return TextField(
+      controller: birthDateController,
+      readOnly: true,
+      onTap: () async {
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: _selectedDate ?? DateTime(1990),
+          firstDate: DateTime(1940),
+          lastDate: DateTime.now(),
+        );
+        if (picked != null && picked != _selectedDate) {
+          setState(() {
+            _selectedDate = picked;
+            birthDateController.text = "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+          });
+        }
+      },
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.9),
+        hintText: '생년월일 선택 (예: 1990-01-01)',
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
+        ),
+        suffixIcon: const Icon(Icons.calendar_today),
+      ),
+    );
+  }
+
   Widget _buildGenderButton(String gender) {
     final isSelected = _selectedGender == gender;
     return Expanded(
@@ -171,16 +205,28 @@ class _ConsultingScreenState extends State<ConsultingScreen> {
   }
 
   void _onNextPressed() {
-    // ✅ 상태 저장
-    final consultingData = {
-      'age': ageController.text.trim(),
-      'gender': _selectedGender,
-      'address': addressController.text.trim(),
-      'family': familyController.text.trim(),
-      'job': jobController.text.trim(),
-    };
+    // 입력 검증
+    if (_selectedDate == null || 
+        _selectedGender == null || 
+        addressController.text.trim().isEmpty ||
+        familyController.text.trim().isEmpty ||
+        jobController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('모든 필드를 입력해주세요')),
+      );
+      return;
+    }
 
-    // ✅ 페이지 이동 (명명된 라우트 사용)
+    // ConsultingData 객체 생성 (첫 번째 단계 데이터)
+    final consultingData = ConsultingData(
+      birthDate: _selectedDate,
+      gender: _selectedGender,
+      address: addressController.text.trim(),
+      familyMember: familyController.text.trim(),
+      occupation: jobController.text.trim(),
+    );
+
+    // 두 번째 화면으로 이동
     context.push(
       '/consulting_seconds',
       extra: consultingData,
