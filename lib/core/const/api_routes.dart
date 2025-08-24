@@ -4,10 +4,9 @@ class ApiRoutes {
   static const autoLogin = '/v1/auth/refresh';
   static const logout = '/v1/auth/logout';
 
-  // static const submitConsultingInfo = '/consulting/submit';
-  // static const consultingResult = '/consulting/result';
-  // static const aiConsulting = '/consulting/ai-analysis';
-  // static const latestConsulting = '/consulting/latest';
+  static const consultingResult = '/v1/consultings/generate';
+  static const aiConsulting = '/v1/consulting/generate';
+  static const latestConsulting = '/v1/consulting/:id';
   // static const deleteConsulting = '/consulting/delete';
   //
   static const chatbotMessage = '/chat/message';

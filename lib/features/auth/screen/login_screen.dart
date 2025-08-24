@@ -33,11 +33,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       final response = await AuthApi.login(id, pw);
       if (response.statusCode == 200) {
+        final userId = response.data['user']['user_id'];
         final accessToken = response.data['accessToken'];
         final nickname = response.data['user']['nickname'];
 
         // ✅ 유저 상태에 저장
-        ref.read(userProvider.notifier).state = User(nickname: nickname, accessToken: accessToken);
+        ref.read(userProvider.notifier).state =
+            User(id: userId, nickname: nickname, accessToken: accessToken);
 
         if (!mounted) return;
         context.pushReplacement('/main');
