@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:youturn/features/chatbot/screen/chatbot_starting_screen.dart';
 
-import 'cunsulting_screen.dart';
+import '../consulting/screen/consulting_screen.dart';
 import 'home_screen.dart';
 import 'myprofile_screen.dart';
 
@@ -20,13 +20,13 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(),
 
     /// 컨설팅 탭
-    CunsultingScreen(),
+    ConsultingScreen(),
 
     /// 쳇봇 탭
     ChatbotStartingScreen(),
 
     /// 내 정보 탭
-    MyProfileScreen(),
+    MyprofileScreen(),
   ];
 
   void _onItemTapped(int index) {

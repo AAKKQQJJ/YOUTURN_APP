@@ -5,17 +5,23 @@ import 'package:youturn/core/const/api_routes.dart';
 class AuthApi {
   static Future<Response> login(String id, String pw) {
     return DioClient.dio.post(ApiRoutes.login, data: {
-      'id': id,
+      'login_id': id,
       'password': pw,
     });
   }
 
   static Future<bool> signup(String nickname, String id, String password) async {
-    final response = await DioClient.dio.post('/v1/auth/signup', data: {
-      'nickname': nickname,
-      'login_id': id,
-      'password': password,
-    });
+    final response = await DioClient.dio.post(
+      '/v1/auth/signup',
+      data: {
+        'login_id': id,
+        'password': password,
+        'nickname': nickname,
+      },
+      options: Options(
+        headers: {'Content-Type': 'application/json'},
+      ),
+    );
 
     return response.statusCode == 201;
   }
