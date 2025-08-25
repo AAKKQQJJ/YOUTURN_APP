@@ -22,10 +22,18 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primaryColor,
+      resizeToAvoidBottomInset: true, // 키보드가 올라올 때 화면 크기 조정
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView( // 스크롤 가능하게 만들기
           padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height - 
+                  MediaQuery.of(context).padding.top - 
+                  MediaQuery.of(context).padding.bottom,
+            ),
+            child: IntrinsicHeight(
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 24),
@@ -158,7 +166,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
 
-              const Spacer(),
+              const Expanded(child: SizedBox()), // Spacer 대신 Expanded 사용
 
               // 회원가입 버튼
               SizedBox(
@@ -222,7 +230,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-            ],
+                ],
+              ),
+            ),
           ),
         ),
       ),

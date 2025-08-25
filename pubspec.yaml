@@ -67,6 +67,7 @@ flutter:
     - asset/img/bot_image.png
     - asset/img/user_image.png
     - asset/img/background.png
+    - asset/img/robot.png
 
   fonts:
     - family: malang

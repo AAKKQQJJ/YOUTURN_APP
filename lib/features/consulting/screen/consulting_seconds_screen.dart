@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../provider/user_provider.dart';
 import '../consulting_data.dart';
 
 class ConsultingSecondScreen extends ConsumerStatefulWidget {
@@ -23,6 +22,7 @@ class _ConsultingSecondScreenState extends ConsumerState<ConsultingSecondScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true, // 키보드가 올라올 때 화면 크기 조정
       body: Stack(
         children: [
           // 배경 이미지
@@ -32,12 +32,40 @@ class _ConsultingSecondScreenState extends ConsumerState<ConsultingSecondScreen>
               fit: BoxFit.cover,
             ),
           ),
-          // UI
+          
+          // 사과 이미지들 (고정 위치)
+          Positioned(
+            top: 160,
+            left: 15,
+            child: Image.asset(
+              'asset/img/Apple.png',
+              width: 50,
+              height: 50,
+            ),
+          ),
+          Positioned(
+            bottom: 400,
+            right: 15,
+            child: Image.asset(
+              'asset/img/Apple.png',
+              width: 50,
+              height: 50,
+            ),
+          ),
+          
+          // 스크롤 가능한 UI
           SafeArea(
-            child: Padding(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Column(
-                children: [
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height - 
+                      MediaQuery.of(context).padding.top - 
+                      MediaQuery.of(context).padding.bottom,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
                   const SizedBox(height: 12),
                   Row(
                     children: [
@@ -82,29 +110,61 @@ class _ConsultingSecondScreenState extends ConsumerState<ConsultingSecondScreen>
                         const SizedBox(height: 20),
                         _buildTextField(_regionController, '선호 지역 입력'),
                         const SizedBox(height: 20),
-                        _buildTextField(_experienceController, '농사 경험 입력 (년수)', TextInputType.number),
+                        _buildTextField(
+                            _experienceController, '농사 경험 입력 (년수)', TextInputType.number),
                         const SizedBox(height: 28),
-                        ElevatedButton(
-                          onPressed: () => _goToNextStep(context, ref),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0DC577),
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => context.pop(),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF8EE0BD),
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text(
+                                '뒤로',
+                                style: TextStyle(
+                                  fontFamily: 'suit',
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
                             ),
-                          ),
-                          child: const Text('다음'),
+                            SizedBox(width: 20),
+                            ElevatedButton(
+                              onPressed: () => _goToNextStep(context, ref),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF0DC577),
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text(
+                                '다음',
+                                style: TextStyle(
+                                  fontFamily: 'suit',
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
 
-                  const Spacer(),
+                  const Expanded(child: SizedBox()), // Spacer 대신 Expanded 사용
                   const Padding(
                     padding: EdgeInsets.only(bottom: 20),
                     child: Text("2 / 3"),
                   )
-                ],
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -113,7 +173,8 @@ class _ConsultingSecondScreenState extends ConsumerState<ConsultingSecondScreen>
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hint, [TextInputType? keyboardType]) {
+  Widget _buildTextField(TextEditingController controller, String hint,
+      [TextInputType? keyboardType]) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
@@ -132,7 +193,7 @@ class _ConsultingSecondScreenState extends ConsumerState<ConsultingSecondScreen>
 
   void _goToNextStep(BuildContext context, WidgetRef ref) {
     // 입력 검증
-    if (_budgetController.text.trim().isEmpty || 
+    if (_budgetController.text.trim().isEmpty ||
         _cropController.text.trim().isEmpty ||
         _regionController.text.trim().isEmpty ||
         _experienceController.text.trim().isEmpty) {

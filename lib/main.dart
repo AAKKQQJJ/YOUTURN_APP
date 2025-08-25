@@ -7,11 +7,11 @@ import 'package:youturn/features/consulting/screen/consulting_seconds_screen.dar
 import 'features/auth/screen/login_screen.dart';
 import 'features/auth/screen/signup_screen.dart';
 import 'features/consulting/consulting_data.dart';
+import 'features/consulting/screen/consulting_result_screen.dart';
 import 'features/consulting/screen/consulting_screen.dart';
 import 'features/consulting/screen/consulting_third_screen.dart';
-import 'features/consulting/screen/consulting_result_screen.dart';
-import 'features/screens/main_screen.dart';
 import 'features/screens/home_screen.dart';
+import 'features/screens/main_screen.dart';
 
 final GoRouter _router = GoRouter(
   initialLocation: '/login',

@@ -23,7 +23,7 @@ class ConsultingResultScreen extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          
+
           // UI
           SafeArea(
             child: Padding(
@@ -31,7 +31,7 @@ class ConsultingResultScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 12),
-                  
+
                   // 로고와 제목
                   Row(
                     children: [
@@ -48,9 +48,9 @@ class ConsultingResultScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   SizedBox(height: MediaQuery.of(context).size.width * 0.1),
-                  
+
                   const Center(
                     child: Text(
                       'AI 귀농 컨설팅 결과',
@@ -60,9 +60,9 @@ class ConsultingResultScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 28),
-                  
+
                   // 결과 표시 영역
                   Expanded(
                     child: Container(
@@ -84,7 +84,7 @@ class ConsultingResultScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          
+
                           // 결과 텍스트 (Markdown 렌더링)
                           Expanded(
                             child: Container(
@@ -140,9 +140,9 @@ class ConsultingResultScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 20),
-                          
+
                           // 버튼들
                           Row(
                             children: [
@@ -151,7 +151,7 @@ class ConsultingResultScreen extends StatelessWidget {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     // 홈 화면으로 이동 (모든 스택 제거)
-                                    context.go('/home');
+                                    context.go('/main');
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.grey[400],
@@ -164,9 +164,9 @@ class ConsultingResultScreen extends StatelessWidget {
                                   child: const Text('홈으로'),
                                 ),
                               ),
-                              
+
                               const SizedBox(width: 12),
-                              
+
                               // 다시 컨설팅 받기 버튼
                               Expanded(
                                 child: ElevatedButton(
@@ -191,7 +191,7 @@ class ConsultingResultScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
                 ],
               ),

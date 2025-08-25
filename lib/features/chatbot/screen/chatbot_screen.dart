@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../provider/user_provider.dart';
 import '../chatbot_api.dart';
 import '../message_model.dart';
 
-class ChatbotScreen extends StatefulWidget {
+class ChatbotScreen extends ConsumerStatefulWidget {
   const ChatbotScreen({super.key});
 
   @override
-  State<ChatbotScreen> createState() => _ChatbotScreenState();
+  ConsumerState<ChatbotScreen> createState() => _ChatbotScreenState();
 }
 
-class _ChatbotScreenState extends State<ChatbotScreen> {
+class _ChatbotScreenState extends ConsumerState<ChatbotScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<ChatMessage> _messages = [];
 
@@ -18,17 +20,31 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     final userText = _controller.text.trim();
     if (userText.isEmpty) return;
 
+    // 사용자 정보 확인
+    final user = ref.read(userProvider);
+    if (user == null) {
+      setState(() {
+        _messages.add(ChatMessage(text: '로그인이 필요합니다 🔐', sender: Sender.bot));
+      });
+      return;
+    }
+
     setState(() {
       _messages.add(ChatMessage(text: userText, sender: Sender.user));
     });
     _controller.clear();
 
     try {
-      final botReply = await ChatbotApi.sendMessage(userText);
+      print('=== 챗봇 API 호출 ===');
+      print('메시지: $userText');
+      print('AccessToken: ${user.accessToken}');
+
+      final botReply = await ChatbotApi.sendMessage(userText, user.accessToken);
       setState(() {
         _messages.add(ChatMessage(text: botReply, sender: Sender.bot));
       });
     } catch (e) {
+      print('챗봇 API 오류: $e');
       setState(() {
         _messages.add(ChatMessage(text: '챗봇 응답 실패 😢', sender: Sender.bot));
       });
@@ -68,6 +84,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       top: false,
       child: Scaffold(
         backgroundColor: const Color(0xFFF4FFF8),
+        resizeToAvoidBottomInset: true, // 키보드가 올라올 때 화면 크기 조정
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,

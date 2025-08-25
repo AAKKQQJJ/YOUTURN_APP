@@ -9,7 +9,7 @@ class ApiRoutes {
   static const latestConsulting = '/v1/consulting/:id';
   // static const deleteConsulting = '/consulting/delete';
   //
-  static const chatbotMessage = '/chat/message';
+  static const chatbotMessage = '/v1/chat/send';
   // static const sessionDetail = '/chat/session';
   // static const deleteSession = '/chat/session/delete';
 }

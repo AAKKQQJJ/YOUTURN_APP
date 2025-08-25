@@ -44,19 +44,37 @@ class _MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         /// 바텀 탭바 스타일 ///
+        type: BottomNavigationBarType.fixed, // 애니메이션 및 크기 변화 제거
         backgroundColor: Colors.white,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
-        unselectedIconTheme: IconThemeData(color: Colors.grey),
+        selectedItemColor: Color(0xFF0DC577),
+        unselectedItemColor: Color(0xFF9DC8B6),
+        unselectedIconTheme: IconThemeData(color: Color(0xFF9DC8B6), size: 24),
         showUnselectedLabels: true,
         currentIndex: _selectedIndex,
-        selectedIconTheme: IconThemeData(color: Colors.blueAccent),
+        selectedIconTheme: IconThemeData(color: Color(0xFF0DC577), size: 24),
         onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_add_alt_1_sharp), label: '컨설팅'),
-          BottomNavigationBarItem(icon: Icon(Icons.bedtime_sharp), label: '챗봇'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: '내 정보'),
+        items: [
+          const BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
+          const BottomNavigationBarItem(icon: Icon(Icons.sticky_note_2), label: '컨설팅'),
+          BottomNavigationBarItem(
+            icon: Container(
+              width: 24,
+              height: 24,
+              padding: const EdgeInsets.all(2),
+              child: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  _selectedIndex == 2 ? const Color(0xFF0DC577) : const Color(0xFF9DC8B6),
+                  BlendMode.srcIn,
+                ),
+                child: Image.asset(
+                  'asset/img/robot.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            label: '챗봇',
+          ),
+          const BottomNavigationBarItem(icon: Icon(Icons.person), label: '내 정보'),
         ],
       ),
     );

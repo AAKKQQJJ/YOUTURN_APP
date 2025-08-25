@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:youturn/core/const/colors.dart';
+
 import '../consulting_data.dart';
 
 class ConsultingScreen extends StatefulWidget {
@@ -31,6 +32,7 @@ class _ConsultingScreenState extends State<ConsultingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true, // 키보드가 올라올 때 화면 크기 조정
       body: Stack(
         children: [
           // 배경
@@ -40,13 +42,40 @@ class _ConsultingScreenState extends State<ConsultingScreen> {
               fit: BoxFit.cover,
             ),
           ),
+          
+          // 사과 이미지들 (고정 위치)
+          Positioned(
+            top: 150,
+            left: 15,
+            child: Image.asset(
+              'asset/img/Apple.png',
+              width: 50,
+              height: 50,
+            ),
+          ),
+          Positioned(
+            bottom: 200,
+            right: 18,
+            child: Image.asset(
+              'asset/img/Apple.png',
+              width: 50,
+              height: 50,
+            ),
+          ),
 
-          // UI
+          // 스크롤 가능한 UI
           SafeArea(
-            child: Padding(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Column(
-                children: [
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height - 
+                      MediaQuery.of(context).padding.top - 
+                      MediaQuery.of(context).padding.bottom,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
                   const SizedBox(height: 12),
                   Row(
                     children: [
@@ -121,12 +150,14 @@ class _ConsultingScreenState extends State<ConsultingScreen> {
                       ),
                     ),
                   ),
-                  const Spacer(),
+                  const Expanded(child: SizedBox()), // Spacer 대신 Expanded 사용
                   const Padding(
                     padding: EdgeInsets.only(bottom: 20),
                     child: Text("1 / 3"),
                   ),
-                ],
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -165,7 +196,8 @@ class _ConsultingScreenState extends State<ConsultingScreen> {
         if (picked != null && picked != _selectedDate) {
           setState(() {
             _selectedDate = picked;
-            birthDateController.text = "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+            birthDateController.text =
+                "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
           });
         }
       },
@@ -206,8 +238,8 @@ class _ConsultingScreenState extends State<ConsultingScreen> {
 
   void _onNextPressed() {
     // 입력 검증
-    if (_selectedDate == null || 
-        _selectedGender == null || 
+    if (_selectedDate == null ||
+        _selectedGender == null ||
         addressController.text.trim().isEmpty ||
         familyController.text.trim().isEmpty ||
         jobController.text.trim().isEmpty) {
